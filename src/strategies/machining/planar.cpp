@@ -1,5 +1,5 @@
-#include "strategies/machining/planar.h"
+#include "strategies/machining/Planar.h"
 
-QString PlanarMachining::apply() {
-    return "Planar Machining Applied\n";
+QString PlanarMachining::apply(const PocketParams &p) {
+    return QString("Q15=%1").arg((int) p.machining);
 }

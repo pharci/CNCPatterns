@@ -4,7 +4,7 @@
 
 class PlanarMachining : public MachiningBehavior {
   private:
-    QString apply() override;
+    QString apply(const PocketParams &p) override;
 
   public:
     PlanarMachining() {}

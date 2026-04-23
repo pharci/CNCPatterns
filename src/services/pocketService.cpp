@@ -1,40 +1,39 @@
-#include "pocketService.h"
-#include "strategies/insertion/pendulum.h"
-#include "strategies/insertion/spiral.h"
-#include "strategies/insertion/vertical.h"
-#include "strategies/machining/helical.h"
-#include "strategies/machining/planar.h"
+#include "PocketService.h"
+
+#include "strategies/insertion/Pendulum.h"
+#include "strategies/insertion/Spiral.h"
+#include "strategies/insertion/Vertical.h"
+
+#include "strategies/machining/Helical.h"
+#include "strategies/machining/Planar.h"
+
+#include "strategies/pocket/Circular.h"
+#include "strategies/pocket/Rectangular.h"
+#include <qobject.h>
 
 QString PocketService::generate(const PocketParams &p) {
     QString out;
-
-    out += "=== Pocket Cycle ===\n\n";
-
-    out += QString("Type      : %1\n")
-               .arg(p.type == PocketType::Circular
-                        ? "Circular"
-                        : "Rectangular");
-
-    out += QString("Center X  : %1\n").arg(p.x);
-    out += QString("Center Y  : %1\n").arg(p.y);
-    out += QString("Depth     : %1\n").arg(p.depth);
-
-    if (p.type == PocketType::Circular) {
-        out += QString("Radius    : %1\n").arg(p.radius);
-    } else {
-        out += QString("Length    : %1\n").arg(p.length);
-        out += QString("Width     : %1\n").arg(p.width);
-    }
-
+    auto pocket = createPocket(p);
     auto insertion = createInsertion(p);
-    out += insertion->apply();
-    out += "\n";
+    auto machining = createMachining(p);
 
-    if (p.type == PocketType::Circular) {
-        auto machining = createMachining(p);
-        out += machining->apply();
-        out += "\n";
-    }
+    int line = 10;
+
+    out += QString("N%1 M6 T%2\n").arg(line).arg(p.ToolNumber);
+    line += 10;
+
+    out += QString("N%1 Z60\n").arg(line);
+    line += 10;
+
+    out += QString("N%1 ").arg(line) + pocket->apply(p);
+    out += QString(" ") + insertion->apply(p);
+    if (p.type == PocketType::Circular) { out += QString(" ") + machining->apply(p); }
+    out += QString("\n");
+
+    line += 10;
+    out += QString("N%1 X%2 Y%3 Z%4\n").arg(line).arg(p.X).arg(p.Y).arg(p.Z);
+
+    out += QString("M30");
 
     return out;
 }
@@ -43,13 +42,10 @@ std::unique_ptr<InsertionBehavior>
 PocketService::createInsertion(const PocketParams &p) {
     switch (p.insertion) {
         case InsertionType::Spiral:
-            return std::make_unique<SpiralInsertion>(
-                p.insertionR,
-                p.insertionH);
+            return std::make_unique<SpiralInsertion>();
 
         case InsertionType::Pendulum:
-            return std::make_unique<PendulumInsertion>(
-                p.insertionAngle);
+            return std::make_unique<PendulumInsertion>();
 
         case InsertionType::Vertical:
         default:
@@ -66,5 +62,16 @@ PocketService::createMachining(const PocketParams &p) {
         case CircularMachining::Helical:
         default:
             return std::make_unique<HelicalMachining>();
+    }
+}
+
+std::unique_ptr<PocketBehavior>
+PocketService::createPocket(const PocketParams &p) {
+    switch (p.type) {
+        case PocketType::Circular:
+            return std::make_unique<Circular>();
+        case PocketType::Rectangular:
+        default:
+            return std::make_unique<Rectangular>();
     }
 }

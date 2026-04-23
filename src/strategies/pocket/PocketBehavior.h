@@ -1,8 +1,8 @@
 #pragma once
 #include "common/pch.h"
 
-class MachiningBehavior {
+class PocketBehavior {
   public:
     virtual QString apply(const PocketParams &p) = 0;
-    virtual ~MachiningBehavior() = default;
+    virtual ~PocketBehavior() = default;
 };

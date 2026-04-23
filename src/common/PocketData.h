@@ -1,25 +1,31 @@
 enum class PocketType {
-    Circular,
-    Rectangular
+    Circular = 1,
+    Rectangular = 2
 };
 
 enum class InsertionType {
-    Spiral,
-    Pendulum,
-    Vertical
+    Spiral = 1,
+    Pendulum = 2,
+    Vertical = 3
 };
 
 enum class CircularMachining {
-    Planar,
-    Helical
+    Planar = 1,
+    Helical = 2
 };
 
 struct PocketParams {
     PocketType type;
 
-    double x;
-    double y;
-    double depth;
+    int ToolNumber;
+    double Feed;
+    double SpindleSpeed;
+
+    double X;
+    double Y;
+    double Z;
+    double Z1;
+    double DZ;
 
     double radius;
     double length;

@@ -1,10 +1,5 @@
+#include "PocketWidget.h"
 #include "common/pch.h"
-#include <qgridlayout.h>
-#include <qlabel.h>
-#include <qspinbox.h>
-#include <qwidget.h>
-
-#include "pocketWidget.h"
 
 PocketWidget::PocketWidget(QWidget *parent) : QWidget(parent) {
     setFixedWidth(200);
@@ -22,74 +17,80 @@ void PocketWidget::paintEvent(QPaintEvent *event) {
 }
 
 void PocketWidget::setupUi() {
-    auto *title = new QLabel("Pocket Cycle", this);
-
-    auto *typeLabel = new QLabel("Type", this);
     typeCombo = new QComboBox(this);
-    typeCombo->addItem("Circular", (int) PocketType::Circular);
-    typeCombo->addItem("Rectangular", (int) PocketType::Rectangular);
-    auto *typeLayout = new QHBoxLayout();
-    typeLayout->setContentsMargins(0, 0, 0, 0);
-    typeLayout->setSpacing(8);
-    typeLayout->addWidget(typeLabel);
-    typeLayout->addWidget(typeCombo);
+    typeCombo->addItem("Круговой", (int) PocketType::Circular);
+    typeCombo->addItem("Прямоугольный", (int) PocketType::Rectangular);
+
+    ToolNumberEdit = new QLineEdit(this);
+    FeedEdit = new QLineEdit(this);
+    SpindleSpeedEdit = new QLineEdit(this);
+
     typePages = new QStackedWidget(this);
 
-    centerXEdit = new QLineEdit(this);
-    centerYEdit = new QLineEdit(this);
-    depthEdit = new QLineEdit(this);
-    auto *baseParamsLayout = new QGridLayout();
-    baseParamsLayout->setContentsMargins(0, 0, 0, 0);
-    baseParamsLayout->setSpacing(8);
-    baseParamsLayout->addWidget(new QLabel("X = ", this), 0, 0);
-    baseParamsLayout->addWidget(centerXEdit, 0, 1);
-    baseParamsLayout->addWidget(new QLabel("Y = ", this), 1, 0);
-    baseParamsLayout->addWidget(centerYEdit, 1, 1);
-    baseParamsLayout->addWidget(new QLabel("Depth = ", this), 2, 0);
-    baseParamsLayout->addWidget(depthEdit, 2, 1);
+    XEdit = new QLineEdit(this);
+    YEdit = new QLineEdit(this);
+    ZEdit = new QLineEdit(this);
+    Z1Edit = new QLineEdit(this);
+    DZEdit = new QLineEdit(this);
 
-    auto *insertionLabel = new QLabel("Insertion", this);
     insertionCombo = new QComboBox(this);
-    insertionCombo->addItem("Spiral", (int) InsertionType::Spiral);
-    insertionCombo->addItem("Pendulum", (int) InsertionType::Pendulum);
-    insertionCombo->addItem("Vertical", (int) InsertionType::Vertical);
-    auto *insertionLayout = new QHBoxLayout();
-    insertionLayout->setContentsMargins(0, 0, 0, 0);
-    insertionLayout->setSpacing(8);
-    insertionLayout->addWidget(insertionLabel);
-    insertionLayout->addWidget(insertionCombo);
+    insertionCombo->addItem("По спирали", (int) InsertionType::Spiral);
+    insertionCombo->addItem("Маятниковое", (int) InsertionType::Pendulum);
+    insertionCombo->addItem("Вертикальное", (int) InsertionType::Vertical);
     insertionPages = new QStackedWidget(this);
 
-    auto *machiningLabel = new QLabel("Machining", this);
     machiningCombo = new QComboBox(this);
-    machiningCombo->addItem("Planar", (int) CircularMachining::Planar);
-    machiningCombo->addItem("Helical", (int) CircularMachining::Helical);
+    machiningCombo->addItem("В плоскости", (int) CircularMachining::Planar);
+    machiningCombo->addItem("Спирально", (int) CircularMachining::Helical);
+
     auto *machiningLayout = new QHBoxLayout();
     machiningLayout->setContentsMargins(0, 0, 0, 0);
     machiningLayout->setSpacing(8);
-    machiningLayout->addWidget(machiningLabel);
+    machiningLayout->addWidget(new QLabel("Обработка", this));
     machiningLayout->addWidget(machiningCombo);
     machiningWidget = new QWidget(this);
     machiningWidget->setLayout(machiningLayout);
 
-    btnGenerate = new QPushButton("Generate GCode", this);
+    btnGenerate = new QPushButton("Сгенерировать", this);
+
+    auto *form = new QFormLayout();
+    form->addRow("Тип", typeCombo);
+    form->addRow("T", ToolNumberEdit);
+    form->addRow("F", FeedEdit);
+    form->addRow("S", SpindleSpeedEdit);
+    form->addRow(typePages);
+    form->addRow("X", XEdit);
+    form->addRow("Y", YEdit);
+    form->addRow("Z", ZEdit);
+    form->addRow("Z1", Z1Edit);
+    form->addRow("DZ", DZEdit);
+    form->addRow("Врезание", insertionCombo);
+    form->addRow(insertionPages);
+    form->addRow(machiningWidget);
+    form->addRow(btnGenerate);
 
     auto *root = new QVBoxLayout(this);
     root->setContentsMargins(8, 8, 8, 8);
     root->setSpacing(8);
-    root->addWidget(title);
-
-    root->addLayout(typeLayout);
-    root->addLayout(baseParamsLayout);
-    root->addWidget(typePages);
-
-    root->addLayout(insertionLayout);
-    root->addWidget(insertionPages);
-
-    root->addWidget(machiningWidget);
-
-    root->addWidget(btnGenerate);
+    root->addWidget(new QLabel("Карман", this));
+    root->addLayout(form);
     root->addStretch();
+}
+
+void PocketWidget::setupValidators() {
+    auto *validator = new QDoubleValidator(this);
+    validator->setDecimals(3);
+    validator->setRange(-999999, 999999, 3);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+    validator->setLocale(QLocale::C);
+
+    QList<QLineEdit *> edits = findChildren<QLineEdit *>();
+
+    for (auto *edit : edits) {
+        edit->setValidator(validator);
+        edit->setPlaceholderText("0.000");
+        edit->setAlignment(Qt::AlignRight);
+    }
 }
 
 void PocketWidget::setupPages() {
@@ -97,7 +98,7 @@ void PocketWidget::setupPages() {
     auto *circularPageLayout = new QGridLayout(circularPage);
     circularPage->setLayout(circularPageLayout);
     circularPageLayout->setContentsMargins(0, 0, 0, 0);
-    circularPageLayout->addWidget(new QLabel("R = ", circularPage), 0, 0);
+    circularPageLayout->addWidget(new QLabel("R", circularPage), 0, 0);
     pocketRadius = new QLineEdit(circularPage);
     circularPageLayout->addWidget(pocketRadius, 0, 1);
 
@@ -105,12 +106,12 @@ void PocketWidget::setupPages() {
     auto *rectangularPageLayout = new QGridLayout(rectangularPage);
     rectangularPageLayout->setContentsMargins(0, 0, 0, 0);
     rectangularPage->setLayout(rectangularPageLayout);
-    rectangularPageLayout->addWidget(new QLabel("L = ", rectangularPage), 0, 0);
-    pocketLength = new QLineEdit(rectangularPage);
-    rectangularPageLayout->addWidget(pocketLength, 0, 1);
-    rectangularPageLayout->addWidget(new QLabel("W = ", rectangularPage), 1, 0);
+    rectangularPageLayout->addWidget(new QLabel("W", rectangularPage), 0, 0);
     pocketWidth = new QLineEdit(rectangularPage);
-    rectangularPageLayout->addWidget(pocketWidth, 1, 1);
+    rectangularPageLayout->addWidget(pocketWidth, 0, 1);
+    rectangularPageLayout->addWidget(new QLabel("L", rectangularPage), 1, 0);
+    pocketLength = new QLineEdit(rectangularPage);
+    rectangularPageLayout->addWidget(pocketLength, 1, 1);
 
     typePages->setSizePolicy(
         QSizePolicy::Expanding,
@@ -122,10 +123,10 @@ void PocketWidget::setupPages() {
     auto *spiralPageLayout = new QGridLayout(spiralPage);
     spiralPage->setLayout(spiralPageLayout);
     spiralPageLayout->setContentsMargins(0, 0, 0, 0);
-    spiralPageLayout->addWidget(new QLabel("R = ", spiralPage), 0, 0);
+    spiralPageLayout->addWidget(new QLabel("R", spiralPage), 0, 0);
     insertionR = new QLineEdit(spiralPage);
     spiralPageLayout->addWidget(insertionR, 0, 1);
-    spiralPageLayout->addWidget(new QLabel("H = ", spiralPage), 1, 0);
+    spiralPageLayout->addWidget(new QLabel("H", spiralPage), 1, 0);
     insertionH = new QLineEdit(spiralPage);
     spiralPageLayout->addWidget(insertionH, 1, 1);
 
@@ -133,7 +134,7 @@ void PocketWidget::setupPages() {
     auto *pendulumPageLayout = new QGridLayout(pendulumPage);
     pendulumPage->setLayout(pendulumPageLayout);
     pendulumPageLayout->setContentsMargins(0, 0, 0, 0);
-    pendulumPageLayout->addWidget(new QLabel("α₀ = ", pendulumPage), 1, 0);
+    pendulumPageLayout->addWidget(new QLabel("α₀", pendulumPage), 1, 0);
     insertionAlpha0 = new QLineEdit(pendulumPage);
     pendulumPageLayout->addWidget(insertionAlpha0, 1, 1);
 
@@ -182,9 +183,15 @@ PocketParams PocketWidget::readParamsFromUi() {
 
     params.type = static_cast<PocketType>(typeCombo->currentData().toInt());
 
-    params.x = centerXEdit->text().toDouble();
-    params.y = centerYEdit->text().toDouble();
-    params.depth = depthEdit->text().toDouble();
+    params.ToolNumber = ToolNumberEdit->text().toDouble();
+    params.Feed = FeedEdit->text().toDouble();
+    params.SpindleSpeed = SpindleSpeedEdit->text().toDouble();
+
+    params.X = XEdit->text().toDouble();
+    params.Y = YEdit->text().toDouble();
+    params.Z = ZEdit->text().toDouble();
+    params.Z1 = Z1Edit->text().toDouble();
+    params.DZ = DZEdit->text().toDouble();
 
     params.radius = pocketRadius->text().toDouble();
     params.length = pocketLength->text().toDouble();
@@ -199,16 +206,4 @@ PocketParams PocketWidget::readParamsFromUi() {
     params.machining = static_cast<CircularMachining>(machiningCombo->currentData().toInt());
 
     return params;
-}
-
-void PocketWidget::setupValidators() {
-    auto *validator =
-        new QDoubleValidator(-999999, 999999, 3, this);
-
-    validator->setNotation(QDoubleValidator::StandardNotation);
-
-    QList<QLineEdit *> edits = findChildren<QLineEdit *>();
-
-    for (auto *edit : edits)
-        edit->setValidator(validator);
 }

@@ -4,7 +4,7 @@
 
 class HelicalMachining : public MachiningBehavior {
   private:
-    QString apply() override;
+    QString apply(const PocketParams &p) override;
 
   public:
     HelicalMachining() {}

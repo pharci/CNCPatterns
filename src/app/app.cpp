@@ -1,7 +1,7 @@
 #include "common/pch.h"
 
-#include "app.h"
-#include "interface/pocketWidget.h"
+#include "App.h"
+#include "interface/PocketWidget.h"
 
 App::App(QWidget *parent) : QMainWindow(parent) {
     QWidget *main = new QWidget(this);

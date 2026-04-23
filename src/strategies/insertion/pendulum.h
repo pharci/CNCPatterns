@@ -4,9 +4,8 @@
 
 class PendulumInsertion : public InsertionBehavior {
   private:
-    double alpha;
-    QString apply() override;
+    QString apply(const PocketParams &p) override;
 
   public:
-    PendulumInsertion(double alpha = 0) : alpha(alpha) {}
+    PendulumInsertion() {}
 };

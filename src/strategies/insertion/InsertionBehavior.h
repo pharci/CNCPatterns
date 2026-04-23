@@ -3,6 +3,6 @@
 
 class InsertionBehavior {
   public:
-    virtual QString apply() = 0;
+    virtual QString apply(const PocketParams &p) = 0;
     virtual ~InsertionBehavior() = default;
 };

@@ -4,9 +4,8 @@
 
 class SpiralInsertion : public InsertionBehavior {
   private:
-    double R, H;
-    QString apply() override;
+    QString apply(const PocketParams &p) override;
 
   public:
-    SpiralInsertion(double R = 0, double H = 0) : R(R), H(H) {}
+    SpiralInsertion() {}
 };

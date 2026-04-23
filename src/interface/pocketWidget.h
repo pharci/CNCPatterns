@@ -1,9 +1,6 @@
 #pragma once
 
-#include "services/pocketService.h"
-#include <QWidget>
-#include <qcombobox.h>
-#include <qwidget.h>
+#include "services/PocketService.h"
 
 class BaseObject;
 class PocketWidget : public QWidget {
@@ -17,9 +14,16 @@ class PocketWidget : public QWidget {
 
     QComboBox *typeCombo;
     QStackedWidget *typePages;
-    QLineEdit *centerXEdit;
-    QLineEdit *centerYEdit;
-    QLineEdit *depthEdit;
+
+    QLineEdit *ToolNumberEdit;
+    QLineEdit *FeedEdit;
+    QLineEdit *SpindleSpeedEdit;
+
+    QLineEdit *XEdit;
+    QLineEdit *YEdit;
+    QLineEdit *ZEdit;
+    QLineEdit *Z1Edit;
+    QLineEdit *DZEdit;
     QLineEdit *pocketRadius;
     QLineEdit *pocketLength;
     QLineEdit *pocketWidth;
@@ -36,8 +40,8 @@ class PocketWidget : public QWidget {
     QPushButton *btnGenerate;
     void paintEvent(QPaintEvent *event) override;
     void setupUi();
-    void setupPages();
     void setupValidators();
+    void setupPages();
     void setupConnections();
     PocketParams readParamsFromUi();
   signals:

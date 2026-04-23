@@ -4,7 +4,7 @@
 
 class VerticalInsertion : public InsertionBehavior {
   private:
-    QString apply() override;
+    QString apply(const PocketParams &p) override;
 
   public:
     VerticalInsertion() {}
