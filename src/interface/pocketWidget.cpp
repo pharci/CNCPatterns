@@ -1,3 +1,4 @@
+// PocketWidget.cpp
 #include "PocketWidget.h"
 #include "common/pch.h"
 
@@ -10,11 +11,6 @@ PocketWidget::PocketWidget(QWidget *parent) : QWidget(parent) {
 }
 
 PocketWidget::~PocketWidget() {}
-
-void PocketWidget::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-}
 
 void PocketWidget::setupUi() {
     typeCombo = new QComboBox(this);
@@ -113,9 +109,7 @@ void PocketWidget::setupPages() {
     pocketLength = new QLineEdit(rectangularPage);
     rectangularPageLayout->addWidget(pocketLength, 1, 1);
 
-    typePages->setSizePolicy(
-        QSizePolicy::Expanding,
-        QSizePolicy::Fixed);
+    typePages->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     typePages->addWidget(circularPage);
     typePages->addWidget(rectangularPage);
 
@@ -143,9 +137,7 @@ void PocketWidget::setupPages() {
     verticalPage->setLayout(verticalPageLayout);
     verticalPageLayout->setContentsMargins(0, 0, 0, 0);
 
-    insertionPages->setSizePolicy(
-        QSizePolicy::Expanding,
-        QSizePolicy::Fixed);
+    insertionPages->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     insertionPages->addWidget(spiralPage);
     insertionPages->addWidget(pendulumPage);
     insertionPages->addWidget(verticalPage);
@@ -157,11 +149,8 @@ void PocketWidget::setupConnections() {
             this,
             [this](int index) {
                 typePages->setCurrentIndex(index);
-                if (index == 0) {
-                    machiningWidget->show();
-                } else {
-                    machiningWidget->hide();
-                }
+                if (index == 0) machiningWidget->show();
+                else machiningWidget->hide();
             });
 
     connect(insertionCombo,

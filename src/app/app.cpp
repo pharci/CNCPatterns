@@ -1,5 +1,4 @@
-#include "common/pch.h"
-
+// App.cpp
 #include "App.h"
 #include "interface/PocketWidget.h"
 

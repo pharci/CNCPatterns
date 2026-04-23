@@ -1,3 +1,4 @@
+// Rectangular.cpp
 #include "strategies/pocket/Rectangular.h"
 
 QString Rectangular::apply(const PocketParams &p) {

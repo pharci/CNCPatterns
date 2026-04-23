@@ -1,3 +1,4 @@
+// Spiral.cpp
 #include "strategies/insertion/Spiral.h"
 
 QString SpiralInsertion::apply(const PocketParams &p) {

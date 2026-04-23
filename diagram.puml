@@ -1,0 +1,94 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam monochrome true
+skinparam shadowing false
+skinparam linetype ortho
+left to right direction
+
+interface PocketBehavior {
+    +apply(p: PocketParams) : QString
+}
+
+interface InsertionBehavior {
+    +apply(p: PocketParams) : QString
+}
+
+interface MachiningBehavior {
+    +apply(p: PocketParams) : QString
+}
+
+class PocketService {
+    -pocketBehavior : PocketBehavior*
+    -insertionBehavior : InsertionBehavior*
+    -machiningBehavior : MachiningBehavior*
+    +setPocketBehavior(b)
+    +setInsertionBehavior(b)
+    +setMachiningBehavior(b)
+    +generate(p: PocketParams) : QString
+}
+
+class Circular {
+    +apply(p: PocketParams) : QString
+}
+
+class Rectangular {
+    +apply(p: PocketParams) : QString
+}
+
+class SpiralInsertion {
+    +apply(p: PocketParams) : QString
+}
+
+class PendulumInsertion {
+    +apply(p: PocketParams) : QString
+}
+
+class VerticalInsertion {
+    +apply(p: PocketParams) : QString
+}
+
+class PlanarMachining {
+    +apply(p: PocketParams) : QString
+}
+
+class HelicalMachining {
+    +apply(p: PocketParams) : QString
+}
+
+class PocketParams {
+    +type : PocketType
+    +ToolNumber : int
+    +Feed : double
+    +SpindleSpeed : double
+    +X : double
+    +Y : double
+    +Z : double
+    +Z1 : double
+    +DZ : double
+    +radius : double
+    +length : double
+    +width : double
+    +insertion : InsertionType
+    +insertionR : double
+    +insertionH : double
+    +insertionAngle : double
+    +machining : CircularMachining
+}
+
+PocketBehavior <|.. Circular
+PocketBehavior <|.. Rectangular
+
+InsertionBehavior <|.. SpiralInsertion
+InsertionBehavior <|.. PendulumInsertion
+InsertionBehavior <|.. VerticalInsertion
+
+MachiningBehavior <|.. PlanarMachining
+MachiningBehavior <|.. HelicalMachining
+
+PocketService *-- PocketBehavior
+PocketService *-- InsertionBehavior
+PocketService *-- MachiningBehavior
+
+PocketService ..> PocketParams
+
+@enduml

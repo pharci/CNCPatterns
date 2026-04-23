@@ -1,3 +1,4 @@
+// PocketWidget.h
 #pragma once
 
 #include "services/PocketService.h"
@@ -38,7 +39,6 @@ class PocketWidget : public QWidget {
     QComboBox *machiningCombo;
 
     QPushButton *btnGenerate;
-    void paintEvent(QPaintEvent *event) override;
     void setupUi();
     void setupValidators();
     void setupPages();

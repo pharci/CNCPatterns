@@ -1,3 +1,4 @@
+// Planar.cpp
 #include "strategies/machining/Planar.h"
 
 QString PlanarMachining::apply(const PocketParams &p) {

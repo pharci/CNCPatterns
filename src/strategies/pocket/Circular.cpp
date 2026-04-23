@@ -1,3 +1,4 @@
+// Circular.cpp
 #include "strategies/pocket/Circular.h"
 
 QString Circular::apply(const PocketParams &p) {

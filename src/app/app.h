@@ -1,6 +1,5 @@
+// App.h
 #pragma once
-
-#include <QtWidgets/QMainWindow>
 
 class PocketWidget;
 class App : public QMainWindow {
