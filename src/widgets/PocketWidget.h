@@ -2,17 +2,16 @@
 #pragma once
 
 #include "services/PocketService.h"
+#include "subject/PocketData.h"
 
 class BaseObject;
 class PocketWidget : public QWidget {
     Q_OBJECT
   public:
-    explicit PocketWidget(QWidget *parent = nullptr);
+    explicit PocketWidget(PocketService *pocketService, PocketData *pocketData, QWidget *parent = nullptr);
     ~PocketWidget();
 
   private:
-    PocketService pocketService;
-
     QComboBox *typeCombo;
     QStackedWidget *typePages;
 
@@ -38,12 +37,14 @@ class PocketWidget : public QWidget {
     QWidget *machiningWidget;
     QComboBox *machiningCombo;
 
-    QPushButton *btnGenerate;
     void setupUi();
-    void setupValidators();
+    void setupInputFields();
     void setupPages();
     void setupConnections();
     PocketParams readParamsFromUi();
+
+    PocketService *pocketService;
+    PocketData *pocketData;
   signals:
     void generated(const QString &text);
 };

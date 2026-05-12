@@ -1,13 +1,16 @@
 // PocketWidget.cpp
 #include "PocketWidget.h"
 #include "common/pch.h"
+#include "services/PocketService.h"
+#include "subject/PocketData.h"
 
-PocketWidget::PocketWidget(QWidget *parent) : QWidget(parent) {
+PocketWidget::PocketWidget(PocketService *pocketService, PocketData *pocketData, QWidget *parent) : QWidget(parent), pocketService(pocketService), pocketData(pocketData) {
     setFixedWidth(200);
     setupUi();
     setupPages();
-    setupValidators();
+    setupInputFields();
     setupConnections();
+    pocketData->setParams(readParamsFromUi());
 }
 
 PocketWidget::~PocketWidget() {}
@@ -47,8 +50,6 @@ void PocketWidget::setupUi() {
     machiningWidget = new QWidget(this);
     machiningWidget->setLayout(machiningLayout);
 
-    btnGenerate = new QPushButton("Сгенерировать", this);
-
     auto *form = new QFormLayout();
     form->addRow("Тип", typeCombo);
     form->addRow("T", ToolNumberEdit);
@@ -63,17 +64,16 @@ void PocketWidget::setupUi() {
     form->addRow("Врезание", insertionCombo);
     form->addRow(insertionPages);
     form->addRow(machiningWidget);
-    form->addRow(btnGenerate);
 
     auto *root = new QVBoxLayout(this);
     root->setContentsMargins(8, 8, 8, 8);
     root->setSpacing(8);
-    root->addWidget(new QLabel("Карман", this));
+    root->addWidget(new QLabel("Параметры", this));
     root->addLayout(form);
     root->addStretch();
 }
 
-void PocketWidget::setupValidators() {
+void PocketWidget::setupInputFields() {
     auto *validator = new QDoubleValidator(this);
     validator->setDecimals(3);
     validator->setRange(-999999, 999999, 3);
@@ -86,6 +86,23 @@ void PocketWidget::setupValidators() {
         edit->setValidator(validator);
         edit->setPlaceholderText("0.000");
         edit->setAlignment(Qt::AlignRight);
+        connect(edit,
+                &QLineEdit::textChanged,
+                this,
+                [this]() {
+                    pocketData->setParams(readParamsFromUi());
+                });
+    }
+
+    QList<QComboBox *> combos = findChildren<QComboBox *>();
+
+    for (auto *combo : combos) {
+        connect(combo,
+                &QComboBox::currentIndexChanged,
+                this,
+                [this](int) {
+                    pocketData->setParams(readParamsFromUi());
+                });
     }
 }
 
@@ -159,12 +176,6 @@ void PocketWidget::setupConnections() {
             [this](int index) {
                 insertionPages->setCurrentIndex(index);
             });
-
-    connect(btnGenerate, &QPushButton::clicked, this, [this]() {
-        PocketParams params = readParamsFromUi();
-        emit generated(
-            pocketService.generate(params));
-    });
 }
 
 PocketParams PocketWidget::readParamsFromUi() {

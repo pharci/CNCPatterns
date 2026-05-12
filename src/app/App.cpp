@@ -1,6 +1,5 @@
 // App.cpp
 #include "App.h"
-#include "interface/PocketWidget.h"
 
 App::App(QWidget *parent) : QMainWindow(parent) {
     QWidget *main = new QWidget(this);
@@ -10,18 +9,13 @@ App::App(QWidget *parent) : QMainWindow(parent) {
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
-    outputEdit = new QPlainTextEdit(this);
-    outputEdit->setReadOnly(true);
+    previewWidget = new PreviewWidget(&pocketService, this);
+    pocketWidget = new PocketWidget(&pocketService, &pocketData, this);
 
-    pocketWidget = new PocketWidget(this);
+    pocketData.attach(previewWidget);
 
     layout->addWidget(pocketWidget);
-    layout->addWidget(outputEdit);
-
-    connect(pocketWidget,
-            &PocketWidget::generated,
-            outputEdit,
-            &QPlainTextEdit::setPlainText);
+    layout->addWidget(previewWidget);
 }
 
 App::~App() {}

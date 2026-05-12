@@ -1,7 +1,7 @@
 // pch.h
 #pragma once
 
-#include "common/PocketData.h"
+#include "common/PocketParams.h"
 #include <QComboBox>
 #include <QFormLayout>
 #include <QLabel>
