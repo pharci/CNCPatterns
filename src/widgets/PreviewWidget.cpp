@@ -1,3 +1,4 @@
+// PreviewWidget.cpp
 #include "PreviewWidget.h"
 
 PreviewWidget::PreviewWidget(PocketService *pocketService, QWidget *parent) : QWidget(parent), pocketService(pocketService) {

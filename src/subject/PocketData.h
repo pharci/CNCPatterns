@@ -1,9 +1,11 @@
+// PocketData.h
 #pragma once
 #include "common/PocketParams.h"
 #include "observers/Observer.h"
+#include "subject/Subject.h"
 #include <vector>
 
-class PocketData {
+class PocketData : public Subject {
   private:
     PocketParams params;
     std::vector<Observer *> observers;

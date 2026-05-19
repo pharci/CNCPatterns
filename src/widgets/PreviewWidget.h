@@ -1,3 +1,4 @@
+// PreviewWidget.h
 #pragma once
 #include "common/PocketParams.h"
 #include "observers/Observer.h"
