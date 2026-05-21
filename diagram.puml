@@ -1,94 +1,41 @@
 @startuml
-skinparam classAttributeIconSize 0
-skinparam monochrome true
-skinparam shadowing false
+top to bottom direction
 skinparam linetype ortho
-left to right direction
+skinparam classAttributeIconSize 0
+hide empty members
 
-interface PocketBehavior {
-    +apply(p: PocketParams) : QString
+abstract class ProgramGenerator {
+    +run() : QString
 }
 
-interface InsertionBehavior {
-    +apply(p: PocketParams) : QString
+class Generator {
+    -params : Params
+    +run() : QString
 }
 
-interface MachiningBehavior {
-    +apply(p: PocketParams) : QString
+abstract class ProgramDecorator {
+    -generator : ProgramGenerator
+    +run() : QString
 }
 
-class PocketService {
-    -pocketBehavior : PocketBehavior*
-    -insertionBehavior : InsertionBehavior*
-    -machiningBehavior : MachiningBehavior*
-    +setPocketBehavior(b)
-    +setInsertionBehavior(b)
-    +setMachiningBehavior(b)
-    +generate(p: PocketParams) : QString
+class SafetyLineDecorator {
+    +run() : QString
 }
 
-class Circular {
-    +apply(p: PocketParams) : QString
+class WorkpieceDecorator {
+    +run() : QString
 }
 
-class Rectangular {
-    +apply(p: PocketParams) : QString
-}
+ProgramGenerator <|-- Generator
+ProgramGenerator <|-- ProgramDecorator
 
-class SpiralInsertion {
-    +apply(p: PocketParams) : QString
-}
+ProgramDecorator *--> ProgramGenerator
 
-class PendulumInsertion {
-    +apply(p: PocketParams) : QString
-}
+ProgramDecorator <|-- SafetyLineDecorator
+ProgramDecorator <|-- WorkpieceDecorator
 
-class VerticalInsertion {
-    +apply(p: PocketParams) : QString
-}
-
-class PlanarMachining {
-    +apply(p: PocketParams) : QString
-}
-
-class HelicalMachining {
-    +apply(p: PocketParams) : QString
-}
-
-class PocketParams {
-    +type : PocketType
-    +ToolNumber : int
-    +Feed : double
-    +SpindleSpeed : double
-    +X : double
-    +Y : double
-    +Z : double
-    +Z1 : double
-    +DZ : double
-    +radius : double
-    +length : double
-    +width : double
-    +insertion : InsertionType
-    +insertionR : double
-    +insertionH : double
-    +insertionAngle : double
-    +machining : CircularMachining
-}
-
-PocketBehavior <|.. Circular
-PocketBehavior <|.. Rectangular
-
-InsertionBehavior <|.. SpiralInsertion
-InsertionBehavior <|.. PendulumInsertion
-InsertionBehavior <|.. VerticalInsertion
-
-MachiningBehavior <|.. PlanarMachining
-MachiningBehavior <|.. HelicalMachining
-
-PocketService *-- PocketBehavior
-PocketService *-- InsertionBehavior
-PocketService *-- MachiningBehavior
-
-PocketService ..> PocketParams
-
+ProgramGenerator -[hidden]down- Generator
+ProgramGenerator -[hidden]down- ProgramDecorator
+ProgramDecorator -[hidden]down- SafetyLineDecorator
+ProgramDecorator -[hidden]down- WorkpieceDecorator
 @enduml

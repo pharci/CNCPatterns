@@ -1,7 +1,6 @@
 // pch.h
 #pragma once
 
-#include "common/PocketParams.h"
 #include <QComboBox>
 #include <QFormLayout>
 #include <QLabel>
@@ -12,3 +11,4 @@
 #include <QWidget>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenuBar>
