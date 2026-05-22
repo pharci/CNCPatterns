@@ -1,7 +1,6 @@
 // ControlWidget.h
 #pragma once
 
-#include "operations/drilling/Service.h"
 #include "operations/drilling/models/Data.h"
 
 namespace drilling {
@@ -10,7 +9,7 @@ class ControlWidget : public QWidget {
     Q_OBJECT
 
   public:
-    explicit ControlWidget(Service *service, Data *data, QWidget *parent = nullptr);
+    explicit ControlWidget(Data *data, QWidget *parent = nullptr);
 
     ~ControlWidget();
 
@@ -30,7 +29,6 @@ class ControlWidget : public QWidget {
     void setupInputFields();
 
     Params readParamsFromUi();
-    Service *service;
     Data *data;
   signals:
     void generated(const QString &text);

@@ -1,11 +1,8 @@
 // PocketWidget.cpp
 #include "ControlWidget.h"
-#include "common/pch.h"
-#include "operations/pocket/Service.h"
-#include "operations/pocket/models/Data.h"
+
 namespace pocket {
-ControlWidget::ControlWidget(Service *service, Data *data, QWidget *parent)
-    : QWidget(parent), service(service), data(data) {
+ControlWidget::ControlWidget(Data *data, QWidget *parent) : QWidget(parent), data(data) {
     setFixedWidth(200);
     setupUi();
     setupPages();

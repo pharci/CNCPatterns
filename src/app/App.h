@@ -10,7 +10,9 @@ class App : public QMainWindow {
     ~App();
 
   private:
-    QHBoxLayout *layout;
+    QWidget *ControlWidget = nullptr;
+    QWidget *PreviewWidget = nullptr;
+    QHBoxLayout *root;
     void setModule(std::unique_ptr<OperationModule> module);
     void loadPocketModule();
     void loadDrillingModule();

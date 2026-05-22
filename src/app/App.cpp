@@ -7,40 +7,40 @@ App::App(QWidget *parent) : QMainWindow(parent) {
     QWidget *main = new QWidget(this);
     setCentralWidget(main);
 
-    layout = new QHBoxLayout(main);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-
-    currentModule = std::make_unique<pocket::Module>();
-    layout->addWidget(currentModule->getControlWidget());
-    layout->addWidget(currentModule->getPreviewWidget());
+    root = new QHBoxLayout(main);
+    root->setContentsMargins(0, 0, 0, 0);
+    root->setSpacing(0);
 
     QMenu *operationsMenu = menuBar()->addMenu("Operations");
     QAction *pocketAction = operationsMenu->addAction("Pocket");
     QAction *drillingAction = operationsMenu->addAction("Drilling");
 
-    connect(pocketAction, &QAction::triggered,
-            this, &App::loadPocketModule);
+    connect(pocketAction, &QAction::triggered, this, &App::loadPocketModule);
+    connect(drillingAction, &QAction::triggered, this, &App::loadDrillingModule);
 
-    connect(drillingAction, &QAction::triggered,
-            this, &App::loadDrillingModule);
+    setModule(std::make_unique<pocket::Module>());
 }
 
 App::~App() {}
 
 void App::setModule(std::unique_ptr<OperationModule> module) {
-    if (currentModule) {
-        layout->removeWidget(currentModule->getControlWidget());
-        layout->removeWidget(currentModule->getPreviewWidget());
+    if (ControlWidget) {
+        root->removeWidget(ControlWidget);
+        ControlWidget->deleteLater();
+    }
 
-        delete currentModule->getControlWidget();
-        delete currentModule->getPreviewWidget();
+    if (PreviewWidget) {
+        root->removeWidget(PreviewWidget);
+        PreviewWidget->deleteLater();
     }
 
     currentModule = std::move(module);
 
-    layout->addWidget(currentModule->getControlWidget());
-    layout->addWidget(currentModule->getPreviewWidget());
+    ControlWidget = currentModule->getControlWidget();
+    PreviewWidget = currentModule->getPreviewWidget();
+
+    root->addWidget(ControlWidget);
+    root->addWidget(PreviewWidget);
 }
 
 void App::loadPocketModule() { setModule(std::make_unique<pocket::Module>()); }

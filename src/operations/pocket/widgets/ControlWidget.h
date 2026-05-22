@@ -1,12 +1,13 @@
 // ControlWidget.h
 #pragma once
-#include "operations/pocket/Service.h"
+#include "common/pch.h"
 #include "operations/pocket/models/Data.h"
+
 namespace pocket {
 class ControlWidget : public QWidget {
     Q_OBJECT
   public:
-    explicit ControlWidget(Service *service, Data *data, QWidget *parent = nullptr);
+    explicit ControlWidget(Data *data, QWidget *parent = nullptr);
     ~ControlWidget();
 
   private:
@@ -41,7 +42,6 @@ class ControlWidget : public QWidget {
     void setupConnections();
     Params readParamsFromUi();
 
-    Service *service;
     Data *data;
   signals:
     void generated(const QString &text);

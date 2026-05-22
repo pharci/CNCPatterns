@@ -4,38 +4,65 @@ skinparam linetype ortho
 skinparam classAttributeIconSize 0
 hide empty members
 
-abstract class ProgramGenerator {
-    +run() : QString
+interface OperationModule {
+    +getControlWidget(): QWidget
+    +getPreviewWidget(): QWidget
 }
 
-class Generator {
-    -params : Params
-    +run() : QString
+class PocketModule {
+    -data: Data
+    -service: Service
+    +getControlWidget(): QWidget
+    +getPreviewWidget(): QWidget
 }
 
-abstract class ProgramDecorator {
-    -generator : ProgramGenerator
-    +run() : QString
+class DrillingModule {
+    -data: Data
+    -service: Service
+    +getControlWidget(): QWidget
+    +getPreviewWidget(): QWidget
 }
 
-class SafetyLineDecorator {
-    +run() : QString
+class App {
+    -ControlWidget: QWidget
+    -PreviewWidget: QWidget
 }
 
-class WorkpieceDecorator {
-    +run() : QString
+abstract class QWidget {
 }
 
-ProgramGenerator <|-- Generator
-ProgramGenerator <|-- ProgramDecorator
+class PocketPreviewWidget {
+    +pocketService: Service
+    +previewEdit: QPlainTextEdit
+    +update()
+}
 
-ProgramDecorator *--> ProgramGenerator
+class DrillingPreviewWidget {
+    +pocketService: Service
+    +previewEdit: QPlainTextEdit
+    +update()
+}
 
-ProgramDecorator <|-- SafetyLineDecorator
-ProgramDecorator <|-- WorkpieceDecorator
+class PocketControlWidget {
+}
 
-ProgramGenerator -[hidden]down- Generator
-ProgramGenerator -[hidden]down- ProgramDecorator
-ProgramDecorator -[hidden]down- SafetyLineDecorator
-ProgramDecorator -[hidden]down- WorkpieceDecorator
+class DrillingControlWidget {
+}
+
+OperationModule <|-- PocketModule
+OperationModule <|-- DrillingModule
+App ..> OperationModule
+
+QWidget <|-- PocketPreviewWidget
+QWidget <|-- PocketControlWidget
+QWidget <|-- DrillingPreviewWidget
+QWidget <|-- DrillingControlWidget
+
+App ..> QWidget
+
+PocketModule ..> PocketPreviewWidget
+PocketModule ..> PocketControlWidget
+DrillingModule ..> DrillingPreviewWidget
+DrillingModule ..> DrillingControlWidget
+
 @enduml

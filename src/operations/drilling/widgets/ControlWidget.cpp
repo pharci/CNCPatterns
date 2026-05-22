@@ -1,12 +1,9 @@
 // ControlWidget.cpp
 #include "ControlWidget.h"
-#include "common/pch.h"
-#include "operations/drilling/Service.h"
-#include "operations/drilling/models/Data.h"
+
 namespace drilling {
 
-ControlWidget::ControlWidget(Service *service, Data *data, QWidget *parent)
-    : QWidget(parent), service(service), data(data) {
+ControlWidget::ControlWidget(Data *data, QWidget *parent) : QWidget(parent), data(data) {
     setFixedWidth(200);
     setupUi();
     setupInputFields();
