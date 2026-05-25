@@ -2,6 +2,8 @@
 top to bottom direction
 skinparam linetype ortho
 skinparam classAttributeIconSize 0
+skinparam nodesep 50
+skinparam ranksep 60
 hide empty members
 
 interface OperationModule {
@@ -9,36 +11,29 @@ interface OperationModule {
     +getPreviewWidget(): QWidget
 }
 
+class App {
+    -ControlWidget: QWidget
+    -PreviewWidget: PreviewWidget
+}
+
 class PocketModule {
-    -data: Data
-    -service: Service
+    -controlWidget : QWidget
+    -previewWidget : PreviewWidget
     +getControlWidget(): QWidget
     +getPreviewWidget(): QWidget
 }
 
 class DrillingModule {
-    -data: Data
-    -service: Service
+    -controlWidget : QWidget
+    -previewWidget : PreviewWidget
     +getControlWidget(): QWidget
     +getPreviewWidget(): QWidget
-}
-
-class App {
-    -ControlWidget: QWidget
-    -PreviewWidget: QWidget
 }
 
 abstract class QWidget {
 }
 
-class PocketPreviewWidget {
-    +pocketService: Service
-    +previewEdit: QPlainTextEdit
-    +update()
-}
-
-class DrillingPreviewWidget {
-    +pocketService: Service
+class PreviewWidget {
     +previewEdit: QPlainTextEdit
     +update()
 }
@@ -53,16 +48,25 @@ OperationModule <|-- PocketModule
 OperationModule <|-- DrillingModule
 App ..> OperationModule
 
-QWidget <|-- PocketPreviewWidget
 QWidget <|-- PocketControlWidget
-QWidget <|-- DrillingPreviewWidget
 QWidget <|-- DrillingControlWidget
+QWidget <|-- PreviewWidget
 
 App ..> QWidget
+App ..> PreviewWidget
 
-PocketModule ..> PocketPreviewWidget
-PocketModule ..> PocketControlWidget
-DrillingModule ..> DrillingPreviewWidget
-DrillingModule ..> DrillingControlWidget
+PocketModule --> PocketControlWidget
+PocketModule --> PreviewWidget
+DrillingModule --> DrillingControlWidget
+DrillingModule --> PreviewWidget
+
+App -[hidden]down-> OperationModule
+OperationModule -[hidden]down-> PocketModule
+PocketModule -[hidden]right-> DrillingModule
+
+OperationModule -[hidden]down-> QWidget
+QWidget -[hidden]down-> PreviewWidget
+PreviewWidget -[hidden]down-> PocketControlWidget
+PocketControlWidget -[hidden]right-> DrillingControlWidget
 
 @enduml

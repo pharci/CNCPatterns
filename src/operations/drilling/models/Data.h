@@ -15,5 +15,6 @@ class Data : public Subject<Params> {
     void attach(Observer<Params> *observer);
     void notify();
     void setParams(const Params &newParams);
+    Params getParams();
 };
 } // namespace drilling

@@ -1,10 +1,11 @@
+// pocket/Module.h
 #pragma once
-#include "core/modules/OperationModule.h"
-
 #include "Service.h"
+#include "core/modules/OperationModule.h"
+#include "core/widgets/PreviewWidget.h"
 #include "models/Data.h"
+#include "observers/PreviewObserver.h"
 #include "widgets/ControlWidget.h"
-#include "widgets/PreviewWidget.h"
 
 namespace pocket {
 class Module : public OperationModule {
@@ -13,8 +14,10 @@ class Module : public OperationModule {
     Service service;
     ControlWidget *controlWidget;
     PreviewWidget *previewWidget;
+    PreviewObserver *previewObserver;
     QWidget *getControlWidget() override;
     QWidget *getPreviewWidget() override;
+    QString generate() override;
     Module();
 };
 } // namespace pocket

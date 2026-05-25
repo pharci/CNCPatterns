@@ -30,8 +30,5 @@ class ControlWidget : public QWidget {
 
     Params readParamsFromUi();
     Data *data;
-  signals:
-    void generated(const QString &text);
 };
-
 } // namespace drilling

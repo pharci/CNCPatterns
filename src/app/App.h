@@ -6,14 +6,16 @@ class App : public QMainWindow {
     Q_OBJECT
   public:
     App(QWidget *parent = nullptr);
-    std::unique_ptr<OperationModule> currentModule;
     ~App();
 
   private:
+    std::unique_ptr<OperationModule> currentModule = nullptr;
     QWidget *ControlWidget = nullptr;
     QWidget *PreviewWidget = nullptr;
-    QHBoxLayout *root;
-    void setModule(std::unique_ptr<OperationModule> module);
-    void loadPocketModule();
-    void loadDrillingModule();
+    QHBoxLayout *mainLayout;
+
+    void showModule(std::unique_ptr<OperationModule> module);
+    void openPocketModule();
+    void openDrillingModule();
+    void createToolbar();
 };

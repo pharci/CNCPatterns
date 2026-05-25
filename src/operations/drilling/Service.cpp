@@ -9,8 +9,6 @@
 namespace drilling {
 QString Service::generate(const Params &p) {
     ProgramGenerator *generator = new Generator(p);
-    generator = new WorkpieceDecorator(generator);
-    generator = new SafetyLineDecorator(generator);
     QString result = generator->run();
     delete generator;
     return result;

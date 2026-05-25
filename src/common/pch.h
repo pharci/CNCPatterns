@@ -5,6 +5,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QListWidget>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QStackedWidget>
